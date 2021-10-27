@@ -1,11 +1,7 @@
-FROM python 3.11.0a1-bullseye
+FROM python:3.9
 
-WORKDIR /CentricaTest
-
-COPY requirements.txt
+ADD SearchScraper.py .
 
 RUN pip install -r requirements.txt
 
-COPY ./CentricaTest
-
-CMD ['python', 'SearchScraper.py']
+CMD ["python", "./SearchScraper.py"]
