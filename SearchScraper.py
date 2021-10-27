@@ -5,12 +5,10 @@ import os
 
 import time
 
-start_time = time.time()
-
 
 # Get the links
-def ScrapeLink(query):
-    result = search(query, stop=40, pause=2)
+def ScrapeLink(query, amount):
+    result = search(query, stop=amount, pause=2)
 
     return result
 
@@ -24,9 +22,15 @@ def getLinkData(link):
     return HTMLtxt
 
 
+# Breaking the webpage to chunks for improving time complexity.
+def getChunks(link):
+    chunks = link.find_all('h2')
+    return chunks
+
+
 # Write the HTML to a file and put inside directory
 def writeToFile(data, index):
-    # Declaring the path
+    # Declaring the paths
     parentDir = "SearchResults/"
     # dirName = "Link" + index
     filename = "Link" + index + ".txt"
@@ -45,22 +49,30 @@ def writeToFile(data, index):
         print("Webpage Null")
 
 
-if __name__ == "__main__":
-
-    # Search Keyword
-    Keyword = "how to data engineering"
-
-    # Get the links and store in result
-    result = ScrapeLink(Keyword)
-    print(result)
-    print("Links found in --- %s seconds ---" % (time.time() - start_time))
-    start_time = time.time()
-
+def readAndSaveLinksHTML(scrapedLinks):
     # Iterate through the links
     i = 1
-    for links in result:
+    for links in scrapedLinks:
+        start_time = time.time()
+
+        # Get the full HTML file
         fileTxt = getLinkData(links)
-        writeToFile(fileTxt, str(i))
+        # Get chunks from the file by H2 tag
+        print(getChunks(fileTxt))
+        # Write to files
+        #writeToFile(fileTxt, str(i))
         i += 1
 
-    print("Stored in file in --- %s seconds ---" % (time.time() - start_time))
+        print("Stored in file in --- %s seconds ---" % (time.time() - start_time))
+
+
+if __name__ == "__main__":
+    # Search Keyword
+    Keyword = "how to data engineering"
+    # Number of Links wanted
+    number_of_links = 1
+
+    # Get the links and store in result
+    result = ScrapeLink(Keyword, number_of_links)
+
+    readAndSaveLinksHTML(result)
