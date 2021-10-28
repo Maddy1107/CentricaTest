@@ -5,3 +5,9 @@ ADD SearchScraper.py .
 RUN pip install -r requirements.txt
 
 CMD ["python", "./SearchScraper.py"]
+
+#Command to build
+docker build -t scrapper .
+
+#Command to run
+docker run scrapper
